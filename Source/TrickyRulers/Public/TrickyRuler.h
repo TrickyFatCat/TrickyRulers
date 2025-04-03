@@ -7,7 +7,7 @@
 #include "TrickyRulerProperties.h"
 #include "TrickyRuler.generated.h"
 
-UCLASS(HideCategories=(Collision, Actor, Input, Rendering, Replication, Cooking, HLOD, LevelInstance, DataLayers, Networking, WorldPartition, Physics))
+UCLASS(HideCategories=(Collision, Actor, Input, Rendering, Replication, Cooking, HLOD, LevelInstance, DataLayers, Networking, WorldPartition, Physics, Events, ActorTick))
 class TRICKYRULERS_API ATrickyRuler : public AActor
 {
 	GENERATED_BODY()
@@ -26,25 +26,34 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 protected:
-	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category="Ruler")
+	UPROPERTY(EditDefaultsOnly, Category="Ruler")
+	bool bLockEditing = false;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ruler", meta=(EditCondition="!bLockEditing"))
 	ERulerType RulerType = ERulerType::Line;
 
-	UPROPERTY(EditInstanceOnly,
+	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Ruler",
-		meta=(EditCondition="RulerType==ERulerType::Line", EditConditionHides))
+		meta=(EditCondition="RulerType==ERulerType::Line && !bLockEditing", EditConditionHides))
 	FLineRulerProperties LineRuler;
 
-	UPROPERTY(EditInstanceOnly,
+	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Ruler",
-		meta=(EditCondition="RulerType==ERulerType::Circle", EditConditionHides))
+		meta=(EditCondition="RulerType==ERulerType::Circle && !bLockEditing", EditConditionHides))
 	FCircleRulerProperties CircleRuler;
 	
-	UPROPERTY(EditInstanceOnly,
+	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Ruler",
-		meta=(EditCondition="RulerType==ERulerType::Box", EditConditionHides))
+		meta=(EditCondition="RulerType==ERulerType::Sphere && !bLockEditing", EditConditionHides))
+	FSphereRulerProperties SphereRuler;
+	
+	UPROPERTY(EditAnywhere,
+		BlueprintReadOnly,
+		Category="Ruler",
+		meta=(EditCondition="RulerType==ERulerType::Box && !bLockEditing", EditConditionHides))
 	FBoxRulerProperties BoxRuler;
 	
 
@@ -54,6 +63,9 @@ private:
 
 	UFUNCTION()
 	void DrawCircleRuler() const;
+
+	UFUNCTION()
+	void DrawSphereRuler() const;
 
 	UFUNCTION()
 	void DrawBoxRuler() const;
