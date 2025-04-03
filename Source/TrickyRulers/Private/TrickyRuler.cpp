@@ -21,7 +21,16 @@ void ATrickyRuler::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
 
-	LineRuler.UpdateLength();
+	switch (RulerType)
+	{
+	case ERulerType::Line:
+		LineRuler.UpdateLength();
+		break;
+
+	case ERulerType::Box:
+		BoxRuler.UpdateLength();
+		break;
+	}
 }
 
 void ATrickyRuler::BeginPlay()
@@ -38,6 +47,9 @@ void ATrickyRuler::Tick(float DeltaTime)
 	case ERulerType::Line:
 		DrawLineRuler(GetActorForwardVector(), LineRuler.Length, LineRuler.Color, LineRuler.Thickness);
 		break;
+	case ERulerType::Box:
+		DrawBoxRuler();
+		break;
 	default:
 		break;
 	}
@@ -51,4 +63,33 @@ void ATrickyRuler::DrawLineRuler(const FVector& Direction,
 	const FVector LineStart = GetActorLocation();
 	const FVector LineEnd = LineStart + Direction * Length;
 	DrawDebugLine(GetWorld(), LineStart, LineEnd, Color, false, 0.f, 0, Thickness);
+}
+
+void ATrickyRuler::DrawBoxRuler()
+{
+	const UWorld* World = GetWorld();
+	const FVector Center = GetActorLocation();
+	const FQuat Rotation = GetActorRotation().Quaternion();
+	const FVector Extent = FVector(BoxRuler.LengthX, BoxRuler.LengthY, BoxRuler.LengthZ) * 0.5f;
+	DrawDebugBox(World,
+	             Center,
+	             Extent,
+	             Rotation,
+	             BoxRuler.Color,
+	             false,
+	             0.f,
+	             0,
+	             BoxRuler.Thickness);
+
+	if (BoxRuler.bIsFilled)
+	{
+		DrawDebugSolidBox(World,
+		                  Center,
+		                  Extent - 0.1,
+		                  Rotation,
+		                  BoxRuler.GetFillColor(),
+		                  false,
+		                  0.f,
+		                  0);
+	}
 }

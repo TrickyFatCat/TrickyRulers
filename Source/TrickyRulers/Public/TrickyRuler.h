@@ -29,12 +29,23 @@ protected:
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category="Ruler")
 	ERulerType RulerType = ERulerType::Line;
 
-	// Line ruler properties
-	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category="Ruler",
+	UPROPERTY(EditInstanceOnly,
+		BlueprintReadOnly,
+		Category="Ruler",
 		meta=(EditCondition="RulerType==ERulerType::Line", EditConditionHides))
 	FLineRulerProperties LineRuler;
+
+	UPROPERTY(EditInstanceOnly,
+		BlueprintReadOnly,
+		Category="Ruler",
+		meta=(EditCondition="RulerType==ERulerType::Box", EditConditionHides))
+	FBoxRulerProperties BoxRuler;
+	
 
 private:
 	UFUNCTION()
 	void DrawLineRuler(const FVector& Direction, const float Length, const FColor& Color, const float Thickness) const;
+
+	UFUNCTION()
+	void DrawBoxRuler();
 };
