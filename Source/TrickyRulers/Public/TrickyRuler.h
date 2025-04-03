@@ -38,6 +38,12 @@ protected:
 	UPROPERTY(EditInstanceOnly,
 		BlueprintReadOnly,
 		Category="Ruler",
+		meta=(EditCondition="RulerType==ERulerType::Circle", EditConditionHides))
+	FCircleRulerProperties CircleRuler;
+	
+	UPROPERTY(EditInstanceOnly,
+		BlueprintReadOnly,
+		Category="Ruler",
 		meta=(EditCondition="RulerType==ERulerType::Box", EditConditionHides))
 	FBoxRulerProperties BoxRuler;
 	
@@ -47,5 +53,8 @@ private:
 	void DrawLineRuler(const FVector& Direction, const float Length, const FColor& Color, const float Thickness) const;
 
 	UFUNCTION()
-	void DrawBoxRuler();
+	void DrawCircleRuler() const;
+
+	UFUNCTION()
+	void DrawBoxRuler() const;
 };

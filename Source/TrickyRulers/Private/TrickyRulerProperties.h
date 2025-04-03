@@ -43,6 +43,35 @@ struct FLineRulerProperties
 };
 
 USTRUCT(BlueprintType)
+struct FCircleRulerProperties
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, Category="CircleRuler", meta=(HideAlphaChannel))
+	FColor Color = FColor::Red;
+	
+	UPROPERTY(EditAnywhere, Category="CircleRuler", meta=(Units="cm", ClampMin=1, UIMin=1))
+	int32 Radius = 100;
+
+	UPROPERTY(VisibleAnywhere, Category="CircleRuler")
+	FString Meters = TEXT("1 m");
+
+	UPROPERTY(EditAnywhere,
+		Category="CircleRuler",
+		meta=(ClampMin=1.0f, ClampMax=10.0f, UIMin=1.0f, UIMax=10.0f, Delta=1.0f))
+	float Thickness = 1.0f;
+
+	UPROPERTY(EditAnywhere, Category="CircleRuler", meta=(ClampMin=8, UIMin=8, ClampMax=512, UIMax=512))
+	int32 Segments = 32;
+
+	void UpdateRadius()
+	{
+		const float RadiusMeters = static_cast<float>(Radius) / 100.f;
+		Meters = FString::Printf(TEXT("%.2f m"), RadiusMeters);
+	}
+};
+
+USTRUCT(BlueprintType)
 struct FBoxRulerProperties
 {
 	GENERATED_BODY()

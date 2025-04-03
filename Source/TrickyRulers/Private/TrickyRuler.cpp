@@ -27,6 +27,10 @@ void ATrickyRuler::OnConstruction(const FTransform& Transform)
 		LineRuler.UpdateLength();
 		break;
 
+	case ERulerType::Circle:
+		CircleRuler.UpdateRadius();
+		break;
+
 	case ERulerType::Box:
 		BoxRuler.UpdateLength();
 		break;
@@ -47,6 +51,9 @@ void ATrickyRuler::Tick(float DeltaTime)
 	case ERulerType::Line:
 		DrawLineRuler(GetActorForwardVector(), LineRuler.Length, LineRuler.Color, LineRuler.Thickness);
 		break;
+	case ERulerType::Circle:
+		DrawCircleRuler();
+		break;
 	case ERulerType::Box:
 		DrawBoxRuler();
 		break;
@@ -65,7 +72,22 @@ void ATrickyRuler::DrawLineRuler(const FVector& Direction,
 	DrawDebugLine(GetWorld(), LineStart, LineEnd, Color, false, 0.f, 0, Thickness);
 }
 
-void ATrickyRuler::DrawBoxRuler()
+void ATrickyRuler::DrawCircleRuler() const
+{
+	DrawDebugCircle(GetWorld(),
+	                GetActorLocation(),
+	                CircleRuler.Radius,
+	                CircleRuler.Segments,
+	                CircleRuler.Color,
+	                false,
+	                0.f,
+	                0,
+	                CircleRuler.Thickness,
+	                GetActorRightVector(),
+	                GetActorForwardVector());
+}
+
+void ATrickyRuler::DrawBoxRuler() const
 {
 	const UWorld* World = GetWorld();
 	const FVector Center = GetActorLocation();
