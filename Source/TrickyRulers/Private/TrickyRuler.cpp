@@ -22,7 +22,7 @@ void ATrickyRuler::OnConstruction(const FTransform& Transform)
 	Super::OnConstruction(Transform);
 
 	SetActorScale3D(FVector::One());
-	
+
 	switch (RulerType)
 	{
 	case ERulerType::Line:
@@ -38,8 +38,16 @@ void ATrickyRuler::OnConstruction(const FTransform& Transform)
 		break;
 
 	case ERulerType::Cylinder:
-		const FVector2D DimensionsInMeters = CylinderRuler.GetDimensionsInMeters();
-		Dimensions = FString::Printf(TEXT("Radius: %.2f m\nHeight: %.2f m"), DimensionsInMeters.X, DimensionsInMeters.Y);
+		const FVector2D CylinderDimensions = CylinderRuler.GetDimensionsInMeters();
+		Dimensions =
+			FString::Printf(TEXT("Radius: %.2f m\nHeight: %.2f m"), CylinderDimensions.X, CylinderDimensions.Y);
+		break;
+
+	case ERulerType::Capsule:
+		CapsuleRuler.ClampHeight();
+		const FVector2D CapsuleDimensions = CapsuleRuler.GetDimensionsInMeters();
+		Dimensions =
+			FString::Printf(TEXT("Radius: %.2f m\nHeight: %.2f m"), CapsuleDimensions.X, CapsuleDimensions.Y);
 		break;
 
 	case ERulerType::Box:
@@ -139,6 +147,16 @@ void ATrickyRuler::DrawCylinderRuler() const
 
 void ATrickyRuler::DrawCapsuleRuler() const
 {
+	DrawDebugCapsule(GetWorld(),
+	                 GetActorLocation(),
+	                 CapsuleRuler.Height * 0.5f,
+	                 CapsuleRuler.Radius,
+	                 GetActorRotation().Quaternion(),
+	                 CapsuleRuler.Color,
+	                 false,
+	                 0.f,
+	                 0,
+	                 CapsuleRuler.Thickness);
 }
 
 void ATrickyRuler::DrawBoxRuler() const

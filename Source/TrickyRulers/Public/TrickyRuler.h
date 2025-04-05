@@ -62,6 +62,12 @@ protected:
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Ruler",
+		meta=(EditCondition="RulerType==ERulerType::Capsule && !bLockEditing", EditConditionHides))
+	FCapsuleRulerProperties CapsuleRuler;
+	
+	UPROPERTY(EditAnywhere,
+		BlueprintReadOnly,
+		Category="Ruler",
 		meta=(EditCondition="RulerType==ERulerType::Box && !bLockEditing", EditConditionHides))
 	FBoxRulerProperties BoxRuler;
 	
