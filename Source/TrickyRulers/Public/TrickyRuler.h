@@ -56,6 +56,12 @@ protected:
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
 		Category="Ruler",
+		meta=(EditCondition="RulerType==ERulerType::Cylinder && !bLockEditing", EditConditionHides))
+	FCylinderRulerProperties CylinderRuler;
+	
+	UPROPERTY(EditAnywhere,
+		BlueprintReadOnly,
+		Category="Ruler",
 		meta=(EditCondition="RulerType==ERulerType::Box && !bLockEditing", EditConditionHides))
 	FBoxRulerProperties BoxRuler;
 	

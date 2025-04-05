@@ -68,7 +68,7 @@ struct FSphereRulerProperties
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, Category="ShpereRuler", meta=(HideAlphaChannel))
+	UPROPERTY(EditAnywhere, Category="SphereRuler", meta=(HideAlphaChannel))
 	FColor Color = FColor::Red;
 	
 	UPROPERTY(EditAnywhere, Category="SphereRuler", meta=(Units="cm", ClampMin=1, UIMin=1))
@@ -85,6 +85,36 @@ struct FSphereRulerProperties
 	float GetRadiusInMeters() const
 	{
 		return static_cast<float>(Radius) / 100.f;
+	}
+};
+
+USTRUCT(BlueprintType)
+struct FCylinderRulerProperties
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, Category="CylinderRuler", meta=(HideAlphaChannel))
+	FColor Color = FColor::Red;
+	
+	UPROPERTY(EditAnywhere, Category="CylinderRuler", meta=(Units="cm", ClampMin=1, UIMin=1))
+	int32 Radius = 100;
+
+	UPROPERTY(EditAnywhere, Category="CylinderRuler", meta=(Units="cm", ClampMin=1, UIMin=1))
+	int32 Height = 100;
+
+	UPROPERTY(EditAnywhere,
+		Category="CylinderRuler",
+		meta=(ClampMin=1.0f, ClampMax=10.0f, UIMin=1.0f, UIMax=10.0f, Delta=1.0f))
+	float Thickness = 1.0f;
+
+	UPROPERTY(EditAnywhere, Category="CylinderRuler", meta=(ClampMin=8, UIMin=8, ClampMax=256, UIMax=256))
+	int32 Segments = 32;
+
+	FVector2D GetDimensionsInMeters() const
+	{
+		const float RadiusMeters = static_cast<float>(Radius) / 100.f;
+		const float HeightMeters = static_cast<float>(Height) / 100.f;
+		return FVector2D(RadiusMeters, HeightMeters);
 	}
 };
 

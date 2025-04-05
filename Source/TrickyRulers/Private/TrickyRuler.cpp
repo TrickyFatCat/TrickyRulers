@@ -20,6 +20,8 @@ bool ATrickyRuler::ShouldTickIfViewportsOnly() const
 void ATrickyRuler::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
+
+	SetActorScale3D(FVector::One());
 	
 	switch (RulerType)
 	{
@@ -33,6 +35,11 @@ void ATrickyRuler::OnConstruction(const FTransform& Transform)
 
 	case ERulerType::Sphere:
 		Dimensions = FString::Printf(TEXT("Radius: %.2f m"), SphereRuler.GetRadiusInMeters());
+		break;
+
+	case ERulerType::Cylinder:
+		const FVector2D DimensionsInMeters = CylinderRuler.GetDimensionsInMeters();
+		Dimensions = FString::Printf(TEXT("Radius: %.2f m\nHeight: %.2f m"), DimensionsInMeters.X, DimensionsInMeters.Y);
 		break;
 
 	case ERulerType::Box:
@@ -116,6 +123,18 @@ void ATrickyRuler::DrawSphereRuler() const
 
 void ATrickyRuler::DrawCylinderRuler() const
 {
+	const FVector StartLocation = GetActorLocation();
+	const FVector EndLocation = StartLocation + GetActorUpVector() * CylinderRuler.Height;
+	DrawDebugCylinder(GetWorld(),
+	                  StartLocation,
+	                  EndLocation,
+	                  CylinderRuler.Radius,
+	                  CylinderRuler.Segments,
+	                  CylinderRuler.Color,
+	                  false,
+	                  0.f,
+	                  0,
+	                  CylinderRuler.Thickness);
 }
 
 void ATrickyRuler::DrawCapsuleRuler() const
