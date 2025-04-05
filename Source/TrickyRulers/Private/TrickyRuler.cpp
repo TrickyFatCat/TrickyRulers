@@ -54,6 +54,10 @@ void ATrickyRuler::OnConstruction(const FTransform& Transform)
 		const FVector Length = BoxRuler.GetLengthInMeters();
 		Dimensions = FString::Printf(TEXT("X: %.2f m\nY: %.2f m\nZ: %.2f m"), Length.X, Length.Y, Length.Z);
 		break;
+
+	case ERulerType::Cone:
+		Dimensions = FString::Printf(TEXT("Length: %.2f m\nAngle: %d deg"), ConeRuler.GetLengthInMeters(), ConeRuler.Angle);
+		break;
 	}
 }
 
@@ -203,6 +207,16 @@ void ATrickyRuler::DrawBoxRuler() const
 void ATrickyRuler::DrawConeRuler() const
 {
 	const float AngleRad = FMath::DegreesToRadians(ConeRuler.GetHalfAngle());
-	DrawDebugCone(GetWorld(), GetActorLocation(), GetActorForwardVector(), ConeRuler.Length, AngleRad, AngleRad,
-	              ConeRuler.Segments, ConeRuler.Color, false, 0.f, 0, ConeRuler.Thickness);
+	DrawDebugCone(GetWorld(),
+	              GetActorLocation(),
+	              GetActorForwardVector(),
+	              ConeRuler.Length,
+	              AngleRad,
+	              AngleRad,
+	              ConeRuler.Segments,
+	              ConeRuler.Color,
+	              false,
+	              0.f,
+	              0,
+	              ConeRuler.Thickness);
 }
