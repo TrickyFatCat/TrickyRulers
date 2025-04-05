@@ -20,23 +20,24 @@ bool ATrickyRuler::ShouldTickIfViewportsOnly() const
 void ATrickyRuler::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
-
+	
 	switch (RulerType)
 	{
 	case ERulerType::Line:
-		LineRuler.UpdateLength();
+		Dimensions = FString::Printf(TEXT("Length: %.2f m"), LineRuler.GetLengthInMeters());
 		break;
 
 	case ERulerType::Circle:
-		CircleRuler.UpdateRadius();
+		Dimensions = FString::Printf(TEXT("Radius: %.2f m"), CircleRuler.GetRadiusInMeters());
 		break;
 
 	case ERulerType::Sphere:
-		SphereRuler.UpdateRadius();
+		Dimensions = FString::Printf(TEXT("Radius: %.2f m"), SphereRuler.GetRadiusInMeters());
 		break;
 
 	case ERulerType::Box:
-		BoxRuler.UpdateLength();
+		const FVector Length = BoxRuler.GetLengthInMeters();
+		Dimensions = FString::Printf(TEXT("X: %.2f m\nY: %.2f m\nZ: %.2f m"), Length.X, Length.Y, Length.Z);
 		break;
 	}
 }
@@ -60,6 +61,12 @@ void ATrickyRuler::Tick(float DeltaTime)
 		break;
 	case ERulerType::Sphere:
 		DrawSphereRuler();
+		break;
+	case ERulerType::Cylinder:
+		DrawCylinderRuler();
+		break;
+	case ERulerType::Capsule:
+		DrawCapsuleRuler();
 		break;
 	case ERulerType::Box:
 		DrawBoxRuler();
@@ -105,6 +112,14 @@ void ATrickyRuler::DrawSphereRuler() const
 	                0.f,
 	                0,
 	                SphereRuler.Thickness);
+}
+
+void ATrickyRuler::DrawCylinderRuler() const
+{
+}
+
+void ATrickyRuler::DrawCapsuleRuler() const
+{
 }
 
 void ATrickyRuler::DrawBoxRuler() const

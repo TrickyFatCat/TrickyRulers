@@ -26,11 +26,14 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 protected:
-	UPROPERTY(EditDefaultsOnly, Category="Ruler")
+	UPROPERTY(EditAnywhere, Category="Ruler")
 	bool bLockEditing = false;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ruler", meta=(EditCondition="!bLockEditing"))
 	ERulerType RulerType = ERulerType::Line;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Ruler")
+	FString Dimensions = TEXT("TO BE CALCULATED");
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
@@ -66,6 +69,12 @@ private:
 
 	UFUNCTION()
 	void DrawSphereRuler() const;
+
+	UFUNCTION()
+	void DrawCylinderRuler() const;
+
+	UFUNCTION()
+	void DrawCapsuleRuler() const;
 
 	UFUNCTION()
 	void DrawBoxRuler() const;
