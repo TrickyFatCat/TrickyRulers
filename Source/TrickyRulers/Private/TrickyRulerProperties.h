@@ -235,6 +235,9 @@ struct FConeRulerProperties
 	UPROPERTY(EditAnywhere, Category="ConeRuler", meta=(Units="deg", ClampMin=1, UIMin=1, ClampMax=180, UIMax=180))
 	int32 Angle = 90;
 
+	UPROPERTY(EditAnywhere, Category="ConeRuler")
+	bool bIsFlat = false;
+
 	UPROPERTY(EditAnywhere,
 		Category="ConeRuler",
 		meta=(ClampMin=1.0f, ClampMax=10.0f, UIMin=1.0f, UIMax=10.0f, Delta=1.0f))

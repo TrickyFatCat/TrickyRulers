@@ -56,7 +56,8 @@ void ATrickyRuler::OnConstruction(const FTransform& Transform)
 		break;
 
 	case ERulerType::Cone:
-		Dimensions = FString::Printf(TEXT("Length: %.2f m\nAngle: %d deg"), ConeRuler.GetLengthInMeters(), ConeRuler.Angle);
+		Dimensions = FString::Printf(
+			TEXT("Length: %.2f m\nAngle: %d deg"), ConeRuler.GetLengthInMeters(), ConeRuler.Angle);
 		break;
 	}
 }
@@ -212,7 +213,7 @@ void ATrickyRuler::DrawConeRuler() const
 	              GetActorForwardVector(),
 	              ConeRuler.Length,
 	              AngleRad,
-	              AngleRad,
+	              AngleRad * !ConeRuler.bIsFlat,
 	              ConeRuler.Segments,
 	              ConeRuler.Color,
 	              false,
