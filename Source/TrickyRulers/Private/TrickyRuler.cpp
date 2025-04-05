@@ -86,6 +86,9 @@ void ATrickyRuler::Tick(float DeltaTime)
 	case ERulerType::Box:
 		DrawBoxRuler();
 		break;
+	case ERulerType::Cone:
+		DrawConeRuler();
+		break;
 	default:
 		break;
 	}
@@ -195,4 +198,11 @@ void ATrickyRuler::DrawBoxRuler() const
 		                  0.f,
 		                  0);
 	}
+}
+
+void ATrickyRuler::DrawConeRuler() const
+{
+	const float AngleRad = FMath::DegreesToRadians(ConeRuler.GetHalfAngle());
+	DrawDebugCone(GetWorld(), GetActorLocation(), GetActorForwardVector(), ConeRuler.Length, AngleRad, AngleRad,
+	              ConeRuler.Segments, ConeRuler.Color, false, 0.f, 0, ConeRuler.Thickness);
 }

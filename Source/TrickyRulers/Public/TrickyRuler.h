@@ -71,6 +71,12 @@ protected:
 		meta=(EditCondition="RulerType==ERulerType::Box && !bLockEditing", EditConditionHides))
 	FBoxRulerProperties BoxRuler;
 	
+	UPROPERTY(EditAnywhere,
+		BlueprintReadOnly,
+		Category="Ruler",
+		meta=(EditCondition="RulerType==ERulerType::Cone && !bLockEditing", EditConditionHides))
+	FConeRulerProperties ConeRuler;
+	
 
 private:
 	UFUNCTION()
@@ -90,4 +96,7 @@ private:
 
 	UFUNCTION()
 	void DrawBoxRuler() const;
+
+	UFUNCTION()
+	void DrawConeRuler() const;
 };

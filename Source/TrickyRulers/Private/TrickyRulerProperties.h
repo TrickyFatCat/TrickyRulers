@@ -14,6 +14,7 @@ enum class ERulerType : uint8
 	Cylinder,
 	Capsule,
 	Box,
+	Cone,
 };
 
 USTRUCT(BlueprintType)
@@ -141,7 +142,7 @@ struct FCapsuleRulerProperties
 	UPROPERTY(EditAnywhere, Category="CapsuleRuler", meta=(Units="cm", ClampMin=1, UIMin=1))
 	int32 Height = 100;
 
-	UPROPERTY(EditAnywhere, Category="CylinderRuler", meta=(HideAlphaChannel))
+	UPROPERTY(EditAnywhere, Category="CapsuleRuler", meta=(HideAlphaChannel))
 	bool bCenterOrigin = false;
 	
 	UPROPERTY(EditAnywhere,
@@ -188,7 +189,7 @@ struct FBoxRulerProperties
 	UPROPERTY(EditAnywhere, Category="BoxRuler", meta=(Units="cm", ClampMin=1, UIMin=1))
 	int32 LengthZ = 100;
 
-	UPROPERTY(EditAnywhere, Category="CylinderRuler", meta=(HideAlphaChannel))
+	UPROPERTY(EditAnywhere, Category="BoxRuler", meta=(HideAlphaChannel))
 	bool bCenterOrigin = true;
 	
 	UPROPERTY(EditAnywhere,
@@ -217,5 +218,38 @@ struct FBoxRulerProperties
 		FColor FillColor = Color;
 		FillColor.A = static_cast<uint8>(FillAlpha * 255.f);
 		return FillColor;
+	}
+};
+
+USTRUCT(BlueprintType)
+struct FConeRulerProperties
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, Category="ConeRuler", meta=(HideAlphaChannel))
+	FColor Color = FColor::Red;
+	
+	UPROPERTY(EditAnywhere, Category="ConeRuler", meta=(Units="cm", ClampMin=1, UIMin=1))
+	int32 Length = 100;
+	
+	UPROPERTY(EditAnywhere, Category="ConeRuler", meta=(Units="deg", ClampMin=1, UIMin=1, ClampMax=180, UIMax=180))
+	int32 Angle = 90;
+
+	UPROPERTY(EditAnywhere,
+		Category="ConeRuler",
+		meta=(ClampMin=1.0f, ClampMax=10.0f, UIMin=1.0f, UIMax=10.0f, Delta=1.0f))
+	float Thickness = 1.0f;
+
+	UPROPERTY(EditAnywhere, Category="ConeRuler", meta=(ClampMin=8, UIMin=8, ClampMax=256, UIMax=256))
+	int32 Segments = 32;
+
+	float GetLengthInMeters() const
+	{
+		return static_cast<float>(Length) / 100.f;
+	}
+
+	float GetHalfAngle() const
+	{
+		return static_cast<float>(Angle) * 0.5f;
 	}
 };
