@@ -131,8 +131,12 @@ void ATrickyRuler::DrawSphereRuler() const
 
 void ATrickyRuler::DrawCylinderRuler() const
 {
-	const FVector StartLocation = GetActorLocation();
-	const FVector EndLocation = StartLocation + GetActorUpVector() * CylinderRuler.Height;
+	const FVector Location = GetActorLocation();
+	const FVector UpVector = GetActorUpVector();
+	const FVector StartLocation = CylinderRuler.bCenterOrigin
+		                              ? Location - UpVector * CylinderRuler.GetHalfHeight()
+		                              : Location;
+	const FVector EndLocation = StartLocation + UpVector * CylinderRuler.Height;
 	DrawDebugCylinder(GetWorld(),
 	                  StartLocation,
 	                  EndLocation,
@@ -147,9 +151,12 @@ void ATrickyRuler::DrawCylinderRuler() const
 
 void ATrickyRuler::DrawCapsuleRuler() const
 {
+	const FVector Center = CapsuleRuler.bCenterOrigin
+		                       ? GetActorLocation()
+		                       : GetActorLocation() + GetActorUpVector() * CapsuleRuler.GetHalfHeight();
 	DrawDebugCapsule(GetWorld(),
-	                 GetActorLocation(),
-	                 CapsuleRuler.Height * 0.5f,
+	                 Center,
+	                 CapsuleRuler.GetHalfHeight(),
 	                 CapsuleRuler.Radius,
 	                 GetActorRotation().Quaternion(),
 	                 CapsuleRuler.Color,
@@ -162,7 +169,9 @@ void ATrickyRuler::DrawCapsuleRuler() const
 void ATrickyRuler::DrawBoxRuler() const
 {
 	const UWorld* World = GetWorld();
-	const FVector Center = GetActorLocation();
+	const FVector Center = BoxRuler.bCenterOrigin
+		                       ? GetActorLocation()
+		                       : GetActorLocation() + GetActorUpVector() * BoxRuler.LengthZ * 0.5f;
 	const FQuat Rotation = GetActorRotation().Quaternion();
 	const FVector Extent = FVector(BoxRuler.LengthX, BoxRuler.LengthY, BoxRuler.LengthZ) * 0.5f;
 	DrawDebugBox(World,

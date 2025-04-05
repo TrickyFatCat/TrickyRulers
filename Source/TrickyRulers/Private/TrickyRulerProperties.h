@@ -102,6 +102,9 @@ struct FCylinderRulerProperties
 	UPROPERTY(EditAnywhere, Category="CylinderRuler", meta=(Units="cm", ClampMin=1, UIMin=1))
 	int32 Height = 100;
 
+	UPROPERTY(EditAnywhere, Category="CylinderRuler", meta=(HideAlphaChannel))
+	bool bCenterOrigin = false;
+
 	UPROPERTY(EditAnywhere,
 		Category="CylinderRuler",
 		meta=(ClampMin=1.0f, ClampMax=10.0f, UIMin=1.0f, UIMax=10.0f, Delta=1.0f))
@@ -115,6 +118,11 @@ struct FCylinderRulerProperties
 		const float RadiusMeters = static_cast<float>(Radius) / 100.f;
 		const float HeightMeters = static_cast<float>(Height) / 100.f;
 		return FVector2D(RadiusMeters, HeightMeters);
+	}
+
+	float GetHalfHeight() const
+	{
+		return static_cast<float>(Height) * 0.5f;
 	}
 };
 
@@ -133,6 +141,9 @@ struct FCapsuleRulerProperties
 	UPROPERTY(EditAnywhere, Category="CapsuleRuler", meta=(Units="cm", ClampMin=1, UIMin=1))
 	int32 Height = 100;
 
+	UPROPERTY(EditAnywhere, Category="CylinderRuler", meta=(HideAlphaChannel))
+	bool bCenterOrigin = false;
+	
 	UPROPERTY(EditAnywhere,
 		Category="CapsuleRuler",
 		meta=(ClampMin=1.0f, ClampMax=10.0f, UIMin=1.0f, UIMax=10.0f, Delta=1.0f))
@@ -151,6 +162,11 @@ struct FCapsuleRulerProperties
 	void ClampHeight()
 	{
 		Height = FMath::Max(Height, Radius * 2);
+	}
+
+	float GetHalfHeight() const
+	{
+		return static_cast<float>(Height) * 0.5f;
 	}
 };
 
@@ -172,6 +188,9 @@ struct FBoxRulerProperties
 	UPROPERTY(EditAnywhere, Category="BoxRuler", meta=(Units="cm", ClampMin=1, UIMin=1))
 	int32 LengthZ = 100;
 
+	UPROPERTY(EditAnywhere, Category="CylinderRuler", meta=(HideAlphaChannel))
+	bool bCenterOrigin = true;
+	
 	UPROPERTY(EditAnywhere,
 		Category="LineRuler",
 		meta=(ClampMin=1.0f, ClampMax=10.0f, UIMin=1.0f, UIMax=10.0f, Delta=1.0f))
