@@ -33,6 +33,9 @@ struct FLineRulerProperties
 		meta=(ClampMin=1.0f, ClampMax=10.0f, UIMin=1.0f, UIMax=10.0f, Delta=1.0f))
 	float Thickness = 1.0f;
 
+	UPROPERTY(VisibleAnywhere, Category="LineRuler", meta=(Units="cm"))
+	int32 MarkLength = 50;
+
 	float GetLengthInMeters() const
 	{
 		return static_cast<float>(Length) / 100.f;

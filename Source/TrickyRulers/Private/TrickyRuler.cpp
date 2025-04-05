@@ -17,12 +17,55 @@ bool ATrickyRuler::ShouldTickIfViewportsOnly() const
 	return true;
 }
 
-void ATrickyRuler::OnConstruction(const FTransform& Transform)
+void ATrickyRuler::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
 {
-	Super::OnConstruction(Transform);
+	Super::PostEditChangeProperty(PropertyChangedEvent);
 
 	SetActorScale3D(FVector::One());
+	UpdateDimensions();
+}
 
+void ATrickyRuler::PostInitProperties()
+{
+	Super::PostInitProperties();
+
+	UpdateDimensions();
+}
+
+void ATrickyRuler::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	switch (RulerType)
+	{
+	case ERulerType::Line:
+		DrawLineRuler();
+		break;
+	case ERulerType::Circle:
+		DrawCircleRuler();
+		break;
+	case ERulerType::Sphere:
+		DrawSphereRuler();
+		break;
+	case ERulerType::Cylinder:
+		DrawCylinderRuler();
+		break;
+	case ERulerType::Capsule:
+		DrawCapsuleRuler();
+		break;
+	case ERulerType::Box:
+		DrawBoxRuler();
+		break;
+	case ERulerType::Cone:
+		DrawConeRuler();
+		break;
+	default:
+		break;
+	}
+}
+
+void ATrickyRuler::UpdateDimensions()
+{
 	switch (RulerType)
 	{
 	case ERulerType::Line:
@@ -62,51 +105,59 @@ void ATrickyRuler::OnConstruction(const FTransform& Transform)
 	}
 }
 
-void ATrickyRuler::BeginPlay()
+void ATrickyRuler::DrawLineRuler() const
 {
-	Super::BeginPlay();
-}
-
-void ATrickyRuler::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-	switch (RulerType)
-	{
-	case ERulerType::Line:
-		DrawLineRuler(GetActorForwardVector(), LineRuler.Length, LineRuler.Color, LineRuler.Thickness);
-		break;
-	case ERulerType::Circle:
-		DrawCircleRuler();
-		break;
-	case ERulerType::Sphere:
-		DrawSphereRuler();
-		break;
-	case ERulerType::Cylinder:
-		DrawCylinderRuler();
-		break;
-	case ERulerType::Capsule:
-		DrawCapsuleRuler();
-		break;
-	case ERulerType::Box:
-		DrawBoxRuler();
-		break;
-	case ERulerType::Cone:
-		DrawConeRuler();
-		break;
-	default:
-		break;
-	}
-}
-
-void ATrickyRuler::DrawLineRuler(const FVector& Direction,
-                                 const float Length,
-                                 const FColor& Color,
-                                 const float Thickness) const
-{
+	const FVector Direction = GetActorForwardVector();
 	const FVector LineStart = GetActorLocation();
-	const FVector LineEnd = LineStart + Direction * Length;
-	DrawDebugLine(GetWorld(), LineStart, LineEnd, Color, false, 0.f, 0, Thickness);
+	const FVector LineEnd = LineStart + Direction * LineRuler.Length;
+	DrawDebugLine(GetWorld(),
+	              LineStart,
+	              LineEnd,
+	              LineRuler.Color,
+	              false,
+	              0.f,
+	              0,
+	              LineRuler.Thickness);
+
+	DrawMarker(LineStart);
+	DrawMarker(LineEnd);
+}
+
+void ATrickyRuler::CalculateMarkerPositions(const FVector& Origin,
+                                            const FVector& Direction,
+                                            FVector& StartPos,
+                                            FVector& EndPos) const
+{
+	StartPos = Origin - Direction * LineRuler.MarkLength;
+	EndPos = StartPos + Direction * (LineRuler.MarkLength * 2);
+}
+
+void ATrickyRuler::DrawMarker(const FVector& Origin) const
+{
+	const FVector Direction = GetActorForwardVector();
+	FVector MarkerDirection = Direction.RotateAngleAxis(-90.f, GetActorRightVector());
+	FVector MarkerStart = FVector::ZeroVector;
+	FVector MarkerEnd = FVector::ZeroVector;
+	CalculateMarkerPositions(Origin, MarkerDirection, MarkerStart, MarkerEnd);
+	DrawDebugLine(GetWorld(),
+	              MarkerStart,
+	              MarkerEnd,
+	              LineRuler.Color,
+	              false,
+	              0.f,
+	              0,
+	              LineRuler.Thickness);
+
+	MarkerDirection = Direction.RotateAngleAxis(90.f, GetActorUpVector());
+	CalculateMarkerPositions(Origin, MarkerDirection, MarkerStart, MarkerEnd);
+	DrawDebugLine(GetWorld(),
+	              MarkerStart,
+	              MarkerEnd,
+	              LineRuler.Color,
+	              false,
+	              0.f,
+	              0,
+	              LineRuler.Thickness);
 }
 
 void ATrickyRuler::DrawCircleRuler() const
