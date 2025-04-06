@@ -106,6 +106,9 @@ private:
 	void DrawCylinderRuler() const;
 
 	UFUNCTION()
+	void DrawCylinderLine(const FVector& Origin, const FVector& Direction) const;
+
+	UFUNCTION()
 	void DrawCapsuleRuler() const;
 
 	UFUNCTION()

@@ -233,6 +233,22 @@ void ATrickyRuler::DrawCylinderRuler() const
 	                  0.f,
 	                  0,
 	                  CylinderRuler.Thickness);
+	DrawCylinderLine(Location, GetActorForwardVector());
+	DrawCylinderLine(Location, GetActorRightVector());
+}
+
+void ATrickyRuler::DrawCylinderLine(const FVector& Origin, const FVector& Direction) const
+{
+	FVector LineStart = Origin - Direction * CylinderRuler.Radius;
+	FVector LineEnd = Origin + Direction * CylinderRuler.Radius;
+	DrawDebugLine(GetWorld(),
+	              LineStart,
+	              LineEnd,
+	              CylinderRuler.Color,
+	              false,
+	              0,
+	              0,
+	              CylinderRuler.Thickness);
 }
 
 void ATrickyRuler::DrawCapsuleRuler() const
