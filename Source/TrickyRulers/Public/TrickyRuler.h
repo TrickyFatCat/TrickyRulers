@@ -80,6 +80,9 @@ protected:
 	FConeRulerProperties ConeRuler;
 
 private:
+	UPROPERTY()
+	TObjectPtr<UBillboardComponent> Billboard = nullptr;
+	
 	UFUNCTION()
 	void UpdateDimensions();
 

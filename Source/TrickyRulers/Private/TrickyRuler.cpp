@@ -3,6 +3,8 @@
 
 #include "TrickyRuler.h"
 
+#include "Components/BillboardComponent.h"
+
 
 ATrickyRuler::ATrickyRuler()
 {
@@ -10,6 +12,31 @@ ATrickyRuler::ATrickyRuler()
 	bIsEditorOnlyActor = true;
 
 	RootComponent = CreateEditorOnlyDefaultSubobject<USceneComponent>(TEXT("Root"));
+
+	Billboard = CreateEditorOnlyDefaultSubobject<UBillboardComponent>(TEXT("Billboard"));
+
+	if (Billboard)
+	{
+		Billboard->SetupAttachment(GetRootComponent());
+
+		struct FConstructorStatics
+		{
+			ConstructorHelpers::FObjectFinder<UTexture2D> SpriteTexture;
+			FName ID_Misc;
+			FText NAME_Misc;
+
+			FConstructorStatics()
+				: SpriteTexture(TEXT("/Engine/EditorResources/S_TargetPoint"))
+				  , ID_Misc(TEXT("Misc"))
+				  , NAME_Misc(NSLOCTEXT("SpriteCategory", "Misc", "Misc"))
+			{
+			}
+		};
+
+		static FConstructorStatics ConstructorStatics;
+		Billboard->SetSprite(ConstructorStatics.SpriteTexture.Object);
+		SpriteScale = 0.5;
+	}
 }
 
 bool ATrickyRuler::ShouldTickIfViewportsOnly() const
