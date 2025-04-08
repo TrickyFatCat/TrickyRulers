@@ -3,6 +3,7 @@
 
 #include "TrickyRuler.h"
 
+#include "TrickyDebugTextComponent.h"
 #include "Components/BillboardComponent.h"
 
 
@@ -13,11 +14,13 @@ ATrickyRuler::ATrickyRuler()
 
 	RootComponent = CreateEditorOnlyDefaultSubobject<USceneComponent>(TEXT("Root"));
 
-	Billboard = CreateEditorOnlyDefaultSubobject<UBillboardComponent>(TEXT("Billboard"));
+	TrickyDebugTextComponent = CreateEditorOnlyDefaultSubobject<UTrickyDebugTextComponent>(TEXT("DebugText"));
+	TrickyDebugTextComponent->SetupAttachment(GetRootComponent());
+	BillboardComponent = CreateEditorOnlyDefaultSubobject<UBillboardComponent>(TEXT("Billboard"));
 
-	if (Billboard)
+	if (BillboardComponent)
 	{
-		Billboard->SetupAttachment(GetRootComponent());
+		BillboardComponent->SetupAttachment(GetRootComponent());
 
 		struct FConstructorStatics
 		{
@@ -34,7 +37,7 @@ ATrickyRuler::ATrickyRuler()
 		};
 
 		static FConstructorStatics ConstructorStatics;
-		Billboard->SetSprite(ConstructorStatics.SpriteTexture.Object);
+		BillboardComponent->SetSprite(ConstructorStatics.SpriteTexture.Object);
 		SpriteScale = 0.5;
 	}
 }
@@ -59,10 +62,22 @@ void ATrickyRuler::PostInitProperties()
 	UpdateDimensions();
 }
 
+void ATrickyRuler::PostEditMove(bool bFinished)
+{
+	Super::PostEditMove(bFinished);
+	UpdateDimensions();
+}
+
+void ATrickyRuler::PostLoad()
+{
+	Super::PostLoad();
+	UpdateDimensions();
+}
+
 void ATrickyRuler::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
+
 	switch (RulerType)
 	{
 	case ERulerType::Line:
@@ -97,20 +112,24 @@ void ATrickyRuler::UpdateDimensions()
 	{
 	case ERulerType::Line:
 		Dimensions = FString::Printf(TEXT("Length: %.2f m"), LineRuler.GetLengthInMeters());
+		DebugTextData.Color = LineRuler.Color;
 		break;
 
 	case ERulerType::Circle:
 		Dimensions = FString::Printf(TEXT("Radius: %.2f m"), CircleRuler.GetRadiusInMeters());
+		DebugTextData.Color = CircleRuler.Color;
 		break;
 
 	case ERulerType::Sphere:
 		Dimensions = FString::Printf(TEXT("Radius: %.2f m"), SphereRuler.GetRadiusInMeters());
+		DebugTextData.Color = SphereRuler.Color;
 		break;
 
 	case ERulerType::Cylinder:
 		const FVector2D CylinderDimensions = CylinderRuler.GetDimensionsInMeters();
 		Dimensions =
 			FString::Printf(TEXT("Radius: %.2f m\nHeight: %.2f m"), CylinderDimensions.X, CylinderDimensions.Y);
+		DebugTextData.Color = CylinderRuler.Color;
 		break;
 
 	case ERulerType::Capsule:
@@ -118,18 +137,25 @@ void ATrickyRuler::UpdateDimensions()
 		const FVector2D CapsuleDimensions = CapsuleRuler.GetDimensionsInMeters();
 		Dimensions =
 			FString::Printf(TEXT("Radius: %.2f m\nHeight: %.2f m"), CapsuleDimensions.X, CapsuleDimensions.Y);
+		DebugTextData.Color = CapsuleRuler.Color;
 		break;
 
 	case ERulerType::Box:
 		const FVector Length = BoxRuler.GetLengthInMeters();
 		Dimensions = FString::Printf(TEXT("X: %.2f m\nY: %.2f m\nZ: %.2f m"), Length.X, Length.Y, Length.Z);
+		DebugTextData.Color = BoxRuler.Color;
 		break;
 
 	case ERulerType::Cone:
 		Dimensions = FString::Printf(
 			TEXT("Length: %.2f m\nAngle: %d deg"), ConeRuler.GetLengthInMeters(), ConeRuler.Angle);
+		DebugTextData.Color = ConeRuler.Color;
 		break;
 	}
+
+	DebugTextData.Text = Dimensions;
+	DebugTextData.TextScale = DebugTextScale;
+	TrickyDebugTextComponent->SetDebugLabel(DebugTextData);
 }
 
 void ATrickyRuler::DrawLineRuler() const
@@ -214,8 +240,17 @@ void ATrickyRuler::DrawSphereRuler() const
 	                0.f,
 	                0,
 	                SphereRuler.Thickness);
-	DrawRadiusLines(Center, GetActorForwardVector());
-	DrawRadiusLines(Center, GetActorRightVector());
+	
+	DrawRadiusLines(Center,
+	                GetActorForwardVector(),
+	                SphereRuler.Radius,
+	                SphereRuler.Color,
+	                SphereRuler.Thickness);
+	DrawRadiusLines(Center,
+	                GetActorRightVector(),
+	                SphereRuler.Radius,
+	                SphereRuler.Color,
+	                SphereRuler.Thickness);
 }
 
 void ATrickyRuler::DrawCylinderRuler() const
@@ -236,22 +271,35 @@ void ATrickyRuler::DrawCylinderRuler() const
 	                  0.f,
 	                  0,
 	                  CylinderRuler.Thickness);
-	DrawRadiusLines(Location, GetActorForwardVector());
-	DrawRadiusLines(Location, GetActorRightVector());
+
+	DrawRadiusLines(Location,
+	                GetActorForwardVector(),
+	                CylinderRuler.Radius,
+	                CylinderRuler.Color,
+	                CylinderRuler.Thickness);
+	DrawRadiusLines(Location,
+	                GetActorRightVector(),
+	                CylinderRuler.Radius,
+	                CylinderRuler.Color,
+	                CylinderRuler.Thickness);
 }
 
-void ATrickyRuler::DrawRadiusLines(const FVector& Origin, const FVector& Direction) const
+void ATrickyRuler::DrawRadiusLines(const FVector& Origin,
+                                   const FVector& Direction,
+                                   const float Radius,
+                                   const FColor& Color,
+                                   const float Thickness) const
 {
-	FVector LineStart = Origin - Direction * CylinderRuler.Radius;
-	FVector LineEnd = Origin + Direction * CylinderRuler.Radius;
+	FVector LineStart = Origin - Direction * Radius;
+	FVector LineEnd = Origin + Direction * Radius;
 	DrawDebugLine(GetWorld(),
 	              LineStart,
 	              LineEnd,
-	              CylinderRuler.Color,
+	              Color,
 	              false,
 	              0,
 	              0,
-	              CylinderRuler.Thickness);
+	              Thickness);
 }
 
 void ATrickyRuler::DrawCapsuleRuler() const

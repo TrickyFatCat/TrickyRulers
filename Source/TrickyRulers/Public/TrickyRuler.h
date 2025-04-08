@@ -3,13 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "TrickyDebugTextComponent.h"
 #include "GameFramework/Actor.h"
 #include "TrickyRulerProperties.h"
 #include "TrickyRuler.generated.h"
 
-UCLASS(
-	HideCategories=(Collision, Actor, Input, Rendering, Replication, Cooking, HLOD, LevelInstance, DataLayers,
-		Networking, WorldPartition, Physics, Events, "Actor Tick"))
+UCLASS(HideCategories=(Collision, Actor, Input, Rendering, Replication, Cooking, HLOD, LevelInstance,
+	DataLayers, Networking, WorldPartition, Physics, Events, "Actor Tick"))
 class TRICKYRULERS_API ATrickyRuler : public AActor
 {
 	GENERATED_BODY()
@@ -24,6 +24,10 @@ protected:
 
 	virtual void PostInitProperties() override;
 
+	virtual void PostEditMove(bool bFinished) override;
+
+	virtual void PostLoad() override;
+
 public:
 	virtual void Tick(float DeltaTime) override;
 
@@ -34,8 +38,18 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Ruler", meta=(EditCondition="!bLockEditing"))
 	ERulerType RulerType = ERulerType::Line;
 
+	UPROPERTY(EditAnywhere,
+		BlueprintReadOnly,
+		Category="Ruler",
+		AdvancedDisplay,
+		meta=(EditCondition="!bLockEditing", ClampMin=1, UIMin=1, ClampMax=2, UIMax=2, Delta=0.1))
+	float DebugTextScale = 1.f;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Ruler")
 	FString Dimensions = TEXT("TO BE CALCULATED");
+
+	UPROPERTY()
+	FTrickyDebugTextData DebugTextData{Dimensions, false, FVector::Zero(), FColor::Magenta};
 
 	UPROPERTY(EditAnywhere,
 		BlueprintReadOnly,
@@ -81,7 +95,10 @@ protected:
 
 private:
 	UPROPERTY()
-	TObjectPtr<UBillboardComponent> Billboard = nullptr;
+	TObjectPtr<UBillboardComponent> BillboardComponent = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<UTrickyDebugTextComponent> TrickyDebugTextComponent = nullptr;
 
 	UFUNCTION()
 	void UpdateDimensions();
@@ -106,7 +123,11 @@ private:
 	void DrawCylinderRuler() const;
 
 	UFUNCTION()
-	void DrawRadiusLines(const FVector& Origin, const FVector& Direction) const;
+	void DrawRadiusLines(const FVector& Origin,
+	                     const FVector& Direction,
+	                     const float Radius,
+	                     const FColor& Color,
+	                     const float Thickness) const;
 
 	UFUNCTION()
 	void DrawCapsuleRuler() const;
