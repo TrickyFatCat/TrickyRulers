@@ -153,7 +153,14 @@ void ATrickyRuler::UpdateDimensions()
 		break;
 	}
 
-	DebugTextData.Text = Dimensions;
+	const FString Delimiter = TEXT("\n==========\n");
+	const FString DebugText = FString::Printf(TEXT("%s%s%s%s%s"),
+	                                          *Delimiter,
+	                                          *GetActorNameOrLabel(),
+	                                          *Delimiter,
+	                                          *Dimensions,
+	                                          *Delimiter);
+	DebugTextData.Text = DebugText;
 	DebugTextData.TextScale = DebugTextScale;
 	TrickyDebugTextComponent->SetDebugLabel(DebugTextData);
 }
@@ -240,7 +247,7 @@ void ATrickyRuler::DrawSphereRuler() const
 	                0.f,
 	                0,
 	                SphereRuler.Thickness);
-	
+
 	DrawRadiusLines(Center,
 	                GetActorForwardVector(),
 	                SphereRuler.Radius,
