@@ -82,7 +82,7 @@ protected:
 private:
 	UPROPERTY()
 	TObjectPtr<UBillboardComponent> Billboard = nullptr;
-	
+
 	UFUNCTION()
 	void UpdateDimensions();
 
@@ -106,7 +106,7 @@ private:
 	void DrawCylinderRuler() const;
 
 	UFUNCTION()
-	void DrawCylinderLine(const FVector& Origin, const FVector& Direction) const;
+	void DrawRadiusLines(const FVector& Origin, const FVector& Direction) const;
 
 	UFUNCTION()
 	void DrawCapsuleRuler() const;

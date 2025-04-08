@@ -62,7 +62,7 @@ void ATrickyRuler::PostInitProperties()
 void ATrickyRuler::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 	switch (RulerType)
 	{
 	case ERulerType::Line:
@@ -204,8 +204,9 @@ void ATrickyRuler::DrawCircleRuler() const
 
 void ATrickyRuler::DrawSphereRuler() const
 {
+	const FVector Center = GetActorLocation();
 	DrawDebugSphere(GetWorld(),
-	                GetActorLocation(),
+	                Center,
 	                SphereRuler.Radius,
 	                SphereRuler.Segments,
 	                SphereRuler.Color,
@@ -213,6 +214,8 @@ void ATrickyRuler::DrawSphereRuler() const
 	                0.f,
 	                0,
 	                SphereRuler.Thickness);
+	DrawRadiusLines(Center, GetActorForwardVector());
+	DrawRadiusLines(Center, GetActorRightVector());
 }
 
 void ATrickyRuler::DrawCylinderRuler() const
@@ -233,11 +236,11 @@ void ATrickyRuler::DrawCylinderRuler() const
 	                  0.f,
 	                  0,
 	                  CylinderRuler.Thickness);
-	DrawCylinderLine(Location, GetActorForwardVector());
-	DrawCylinderLine(Location, GetActorRightVector());
+	DrawRadiusLines(Location, GetActorForwardVector());
+	DrawRadiusLines(Location, GetActorRightVector());
 }
 
-void ATrickyRuler::DrawCylinderLine(const FVector& Origin, const FVector& Direction) const
+void ATrickyRuler::DrawRadiusLines(const FVector& Origin, const FVector& Direction) const
 {
 	FVector LineStart = Origin - Direction * CylinderRuler.Radius;
 	FVector LineEnd = Origin + Direction * CylinderRuler.Radius;
