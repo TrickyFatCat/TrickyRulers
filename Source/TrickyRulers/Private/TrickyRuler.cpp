@@ -163,6 +163,7 @@ void ATrickyRuler::UpdateDimensions()
 	DebugTextData.Text = DebugText;
 	DebugTextData.TextScale = DebugTextScale;
 	TrickyDebugTextComponent->SetDebugLabel(DebugTextData);
+	TrickyDebugTextComponent->SetDrawDebug(bShowDebugText);
 }
 
 void ATrickyRuler::DrawLineRuler() const
