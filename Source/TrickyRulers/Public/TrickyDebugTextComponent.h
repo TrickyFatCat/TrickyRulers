@@ -74,7 +74,7 @@ public:
 };
 
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+UCLASS(ClassGroup=(TrickyProptotyping), meta=(BlueprintSpawnableComponent))
 class TRICKYRULERS_API UTrickyDebugTextComponent : public UDebugDrawComponent
 {
 	GENERATED_BODY()
@@ -85,13 +85,22 @@ public:
 protected:
 	FDebugTextDelegateHelper DebugDrawDelegateManager;
 
+	/**
+	 * Determines if the debug text should be drawn in viewport.
+	 */
 	UPROPERTY(EditAnywhere, Category="DebugText")
 	bool bDrawDebug = true;
 
-	UPROPERTY(EditAnywhere, Category="DebugText",
+	/**
+	 * Current debug text data.
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="DebugText",
 		meta=(EditCondition = "!bDrawOneLabel && bDrawDebug", EditConditionHides))
 	TArray<FTrickyDebugTextData> DebugLabels;
 
+	/**
+	 * Determines if the debug text should be shown in game.
+	 */
 	UPROPERTY(EditAnywhere, Category="DebugText", meta=(EditCondition="bDrawDebug"))
 	bool bDrawInGame = false;
 
