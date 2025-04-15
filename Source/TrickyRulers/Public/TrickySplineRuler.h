@@ -38,12 +38,21 @@ protected:
 	UPROPERTY()
 	TObjectPtr<UTrickyDebugTextComponent> DebugTextComponent = nullptr;
 
+	/**
+	 * Determines if length per point should be shown.
+	 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DebugText")
 	bool bShowDistancePerPoint = false;
 
+	/**
+	 * Determines if length of each sector should be shown.
+	 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DebugText")
 	bool bShowSectionsLength = false;
-	
+
+	/**
+	 * Color of the debug text.
+	 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DebugText")
 	FColor DebugTextColor = FColor::Magenta;
 
@@ -53,10 +62,16 @@ private:
 	
 	UPROPERTY()
 	TArray<FTrickyDebugTextData> DebugTextData;
-	
+
+	/**
+	 * Sets all points type to linear.
+	 */
 	UFUNCTION(CallInEditor, Category = "Spline", meta = (DisplayAfter="Transform"))
 	void SetTypeToLinear() const;
-	
+
+	/**
+	 * Sets all points type to curve.
+	 */
 	UFUNCTION(CallInEditor, Category = "Spline", meta = (DisplayAfter="Transform"))
 	void SetTypeToCurve() const;
 
