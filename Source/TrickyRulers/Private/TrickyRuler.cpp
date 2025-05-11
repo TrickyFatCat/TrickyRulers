@@ -5,6 +5,8 @@
 
 #include "TrickyDebugTextComponent.h"
 #include "Components/BillboardComponent.h"
+#include "UObject/ConstructorHelpers.h"
+#include "Engine/Texture2D.h"
 
 
 ATrickyRuler::ATrickyRuler()
@@ -21,23 +23,8 @@ ATrickyRuler::ATrickyRuler()
 	if (BillboardComponent)
 	{
 		BillboardComponent->SetupAttachment(GetRootComponent());
-
-		struct FConstructorStatics
-		{
-			ConstructorHelpers::FObjectFinder<UTexture2D> SpriteTexture;
-			FName ID_Misc;
-			FText NAME_Misc;
-
-			FConstructorStatics()
-				: SpriteTexture(TEXT("/Engine/EditorResources/S_TargetPoint"))
-				  , ID_Misc(TEXT("Misc"))
-				  , NAME_Misc(NSLOCTEXT("SpriteCategory", "Misc", "Misc"))
-			{
-			}
-		};
-
-		static FConstructorStatics ConstructorStatics;
-		BillboardComponent->SetSprite(ConstructorStatics.SpriteTexture.Object);
+		UTexture2D* BillboardTexture = LoadObject<UTexture2D>(this, TEXT("/Engine/EditorResources/S_TargetPoint"));
+		BillboardComponent->SetSprite(BillboardTexture);
 		SpriteScale = 0.5;
 	}
 }

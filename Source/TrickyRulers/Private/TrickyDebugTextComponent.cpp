@@ -4,6 +4,8 @@
 #include "TrickyDebugTextComponent.h"
 
 #include "Engine/Canvas.h"
+#include "Engine/World.h"
+#include "Engine/Engine.h"
 
 FDebugSceneProxy::FDebugSceneProxy(const UPrimitiveComponent* InComponent,
                                    FDebugSceneProxyData* ProxyData) : FDebugRenderSceneProxy(InComponent)
