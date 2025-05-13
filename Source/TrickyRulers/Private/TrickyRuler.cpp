@@ -173,7 +173,7 @@ void ATrickyRuler::DrawLineRuler() const
 	if (LineRuler.bShowMarkers)
 	{
 		const int32 MarkLength = LineRuler.MarkerLength;
-		const int32 MarkersAmount = MarkLength > 0 ? LineRuler.Length / LineRuler.MarkersDistance : 0;
+		const int32 MarkersAmount = MarkLength > 0 ? (LineRuler.Length / LineRuler.MarkersDistance) + 1 : 0;
 
 		if (MarkersAmount <= 0)
 		{
