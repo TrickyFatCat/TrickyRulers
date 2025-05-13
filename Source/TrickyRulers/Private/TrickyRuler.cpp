@@ -169,6 +169,23 @@ void ATrickyRuler::DrawLineRuler() const
 
 	DrawMarker(LineStart);
 	DrawMarker(LineEnd);
+
+	if (LineRuler.bShowMarkers)
+	{
+		const int32 MarkLength = LineRuler.MarkerLength;
+		const int32 MarkersAmount = MarkLength > 0 ? LineRuler.Length / LineRuler.MarkersDistance : 0;
+
+		if (MarkersAmount <= 0)
+		{
+			return;
+		}
+		
+		for (int32 i = 1; i < MarkersAmount; ++i)
+		{
+			FVector MarkerLocation = LineStart + Direction * (i * LineRuler.MarkersDistance);
+			DrawMarker(MarkerLocation);
+		}
+	}
 }
 
 void ATrickyRuler::CalculateMarkerPositions(const FVector& Origin,
@@ -176,8 +193,8 @@ void ATrickyRuler::CalculateMarkerPositions(const FVector& Origin,
                                             FVector& StartPos,
                                             FVector& EndPos) const
 {
-	StartPos = Origin - Direction * LineRuler.MarkLength;
-	EndPos = StartPos + Direction * (LineRuler.MarkLength * 2);
+	StartPos = Origin - Direction * LineRuler.MarkerLength;
+	EndPos = StartPos + Direction * (LineRuler.MarkerLength * 2);
 }
 
 void ATrickyRuler::DrawMarker(const FVector& Origin) const

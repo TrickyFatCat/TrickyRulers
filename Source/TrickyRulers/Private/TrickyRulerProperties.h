@@ -24,17 +24,23 @@ struct FLineRulerProperties
 
 	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(HideAlphaChannel))
 	FColor Color = FColor::Red;
-	
+
 	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(Units="cm", ClampMin=1, UIMin=1))
 	int32 Length = 100;
+
+	UPROPERTY(EditAnywhere, Category="LineRuler")
+	bool bShowMarkers = true;
+
+	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(Units="cm", ClampMin=1, UIMin=1, EditCondition="bShowMarkers"))
+	int32 MarkersDistance = 100;
+	
+	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(Units="cm", ClampMin=1, UIMin=1, EditCondition="bShowMarkers"))
+	int32 MarkerLength = 25;
 
 	UPROPERTY(EditAnywhere,
 		Category="LineRuler",
 		meta=(ClampMin=1.0f, ClampMax=10.0f, UIMin=1.0f, UIMax=10.0f, Delta=1.0f))
-	float Thickness = 1.0f;
-
-	UPROPERTY(VisibleAnywhere, Category="LineRuler", meta=(Units="cm"))
-	int32 MarkLength = 50;
+	float Thickness = 4.0f;
 
 	float GetLengthInMeters() const
 	{
@@ -49,14 +55,14 @@ struct FCircleRulerProperties
 
 	UPROPERTY(EditAnywhere, Category="CircleRuler", meta=(HideAlphaChannel))
 	FColor Color = FColor::Red;
-	
+
 	UPROPERTY(EditAnywhere, Category="CircleRuler", meta=(Units="cm", ClampMin=1, UIMin=1))
 	int32 Radius = 100;
 
 	UPROPERTY(EditAnywhere,
 		Category="CircleRuler",
 		meta=(ClampMin=1.0f, ClampMax=10.0f, UIMin=1.0f, UIMax=10.0f, Delta=1.0f))
-	float Thickness = 1.0f;
+	float Thickness = 4.0f;
 
 	UPROPERTY(EditAnywhere, Category="CircleRuler", meta=(ClampMin=8, UIMin=8, ClampMax=256, UIMax=256))
 	int32 Segments = 32;
@@ -74,14 +80,14 @@ struct FSphereRulerProperties
 
 	UPROPERTY(EditAnywhere, Category="SphereRuler", meta=(HideAlphaChannel))
 	FColor Color = FColor::Red;
-	
+
 	UPROPERTY(EditAnywhere, Category="SphereRuler", meta=(Units="cm", ClampMin=1, UIMin=1))
 	int32 Radius = 100;
 
 	UPROPERTY(EditAnywhere,
 		Category="SphereRuler",
 		meta=(ClampMin=1.0f, ClampMax=10.0f, UIMin=1.0f, UIMax=10.0f, Delta=1.0f))
-	float Thickness = 1.0f;
+	float Thickness = 4.0f;
 
 	UPROPERTY(EditAnywhere, Category="SphereRuler", meta=(ClampMin=8, UIMin=8, ClampMax=256, UIMax=256))
 	int32 Segments = 32;
@@ -99,7 +105,7 @@ struct FCylinderRulerProperties
 
 	UPROPERTY(EditAnywhere, Category="CylinderRuler", meta=(HideAlphaChannel))
 	FColor Color = FColor::Red;
-	
+
 	UPROPERTY(EditAnywhere, Category="CylinderRuler", meta=(Units="cm", ClampMin=1, UIMin=1))
 	int32 Radius = 100;
 
@@ -112,7 +118,7 @@ struct FCylinderRulerProperties
 	UPROPERTY(EditAnywhere,
 		Category="CylinderRuler",
 		meta=(ClampMin=1.0f, ClampMax=10.0f, UIMin=1.0f, UIMax=10.0f, Delta=1.0f))
-	float Thickness = 1.0f;
+	float Thickness = 4.0f;
 
 	UPROPERTY(EditAnywhere, Category="CylinderRuler", meta=(ClampMin=8, UIMin=8, ClampMax=256, UIMax=256))
 	int32 Segments = 32;
@@ -138,7 +144,7 @@ struct FCapsuleRulerProperties
 
 	UPROPERTY(EditAnywhere, Category="CapsuleRuler", meta=(HideAlphaChannel))
 	FColor Color = FColor::Red;
-	
+
 	UPROPERTY(EditAnywhere, Category="CapsuleRuler", meta=(Units="cm", ClampMin=1, UIMin=1))
 	int32 Radius = 100;
 
@@ -147,11 +153,11 @@ struct FCapsuleRulerProperties
 
 	UPROPERTY(EditAnywhere, Category="CapsuleRuler", meta=(HideAlphaChannel))
 	bool bCenterOrigin = false;
-	
+
 	UPROPERTY(EditAnywhere,
 		Category="CapsuleRuler",
 		meta=(ClampMin=1.0f, ClampMax=10.0f, UIMin=1.0f, UIMax=10.0f, Delta=1.0f))
-	float Thickness = 1.0f;
+	float Thickness = 4.0f;
 
 	UPROPERTY(EditAnywhere, Category="CapsuleRuler", meta=(ClampMin=8, UIMin=8, ClampMax=256, UIMax=256))
 	int32 Segments = 32;
@@ -182,7 +188,7 @@ struct FBoxRulerProperties
 
 	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(HideAlphaChannel))
 	FColor Color = FColor::Red;
-	
+
 	UPROPERTY(EditAnywhere, Category="BoxRuler", meta=(Units="cm", ClampMin=1, UIMin=1))
 	int32 LengthX = 100;
 
@@ -194,11 +200,11 @@ struct FBoxRulerProperties
 
 	UPROPERTY(EditAnywhere, Category="BoxRuler", meta=(HideAlphaChannel))
 	bool bCenterOrigin = true;
-	
+
 	UPROPERTY(EditAnywhere,
 		Category="LineRuler",
 		meta=(ClampMin=1.0f, ClampMax=10.0f, UIMin=1.0f, UIMax=10.0f, Delta=1.0f))
-	float Thickness = 1.0f;
+	float Thickness = 4.0f;
 
 	UPROPERTY(EditAnywhere, Category="LineRuler", meta=(HideAlphaChannel))
 	bool bIsFilled = false;
@@ -231,10 +237,10 @@ struct FConeRulerProperties
 
 	UPROPERTY(EditAnywhere, Category="ConeRuler", meta=(HideAlphaChannel))
 	FColor Color = FColor::Red;
-	
+
 	UPROPERTY(EditAnywhere, Category="ConeRuler", meta=(Units="cm", ClampMin=1, UIMin=1))
 	int32 Length = 100;
-	
+
 	UPROPERTY(EditAnywhere, Category="ConeRuler", meta=(Units="deg", ClampMin=1, UIMin=1, ClampMax=180, UIMax=180))
 	int32 Angle = 90;
 
@@ -244,7 +250,7 @@ struct FConeRulerProperties
 	UPROPERTY(EditAnywhere,
 		Category="ConeRuler",
 		meta=(ClampMin=1.0f, ClampMax=10.0f, UIMin=1.0f, UIMax=10.0f, Delta=1.0f))
-	float Thickness = 1.0f;
+	float Thickness = 4.0f;
 
 	UPROPERTY(EditAnywhere, Category="ConeRuler", meta=(ClampMin=8, UIMin=8, ClampMax=256, UIMax=256))
 	int32 Segments = 32;
